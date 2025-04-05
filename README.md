@@ -4,22 +4,12 @@
 
 Steps needed :
 
-1. Install plugins and start the containers
-2. Load wiki dump
-3. Update db and plugins
+1. Add db dump & configure `LocalSettings.php`
+2. Build
 
-### Plugins installation
+### DB dump & `LocalSettings.php`
 
-Run the following command :
-
-```sh
-make build
-docker compose up -d --force-recreate
-```
-
-### Load wiki dump
-
-You should have a wiki media dump if you're working on this, otherwise contact
+You should have a mediawiki dump if you're working on this, otherwise contact
 an Eirbware member, more information might be found at https://docs.eirb.fr
 
 1. place the dump `wiki_dump.sql` in the directory `mariadb`
@@ -36,13 +26,17 @@ mariadb wiki < /config/wiki.sql
 exit
 ```
 
-### Update db and plugin
+Then add all secrets configurations in `wiki/LocalSettings.php`
 
-Media wiki provides a migration tool, to use it do :
+### Build
+
+Just do :
 
 ```sh
-docker exec -it mediawiki ./maintenance/run update
+make install
 ```
+
+And the server will start with all extensions installed and configured
 
 ## Migration (2025)
 
