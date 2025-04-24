@@ -22,25 +22,25 @@ extensions+=OpenIDConnect
 
 extensions_targets=$(addprefix wiki/extensions/,${extensions})
 
-.PHONY: all
+PHONY += all
 all: build
 
-.PHONY: dbshell
+PHONY += dbshell
 dbshell:
 	docker compose up -d
 	docker exec -it wiki-mariadb mariadb wiki
 
-.PHONY: install
+PHONY += install
 install: update
 
-.PHONY: reload
+PHONY += reload
 reload:
 	docker compose up -d
 
-.PHONY: update
+PHONY += update
 update: build
 
-.PHONY: build
+PHONY += build
 build: ${extensions_targets}
 	docker compose up -d --force-recreate
 	sleep 5  # wait for db to start
@@ -54,7 +54,13 @@ wiki/extensions/%:
 	@mkdir -p $(dir $@)
 	git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/$* --branch ${branch_release} $@
 
-.PHONY: clean
+PHONY += clean
 clean:
 	docker compose down
-	rm -rf mariadb wiki/extensions .build
+	rm -rf mariadb .build
+
+PHONY += mrproper
+mrproper: clean
+	rm -rf wiki/extensions
+
+.PHONY: $(PHONY)
