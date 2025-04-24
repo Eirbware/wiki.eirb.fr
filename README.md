@@ -7,7 +7,7 @@ Steps needed :
 1. Add db dump & configure `LocalSettings.php`
 2. Build
 
-### DB dump & `LocalSettings.php`
+### DB dump
 
 You should have a mediawiki dump if you're working on this, otherwise contact
 an Eirbware member, more information might be found at https://docs.eirb.fr
@@ -26,7 +26,39 @@ mariadb wiki < /config/wiki.sql
 exit
 ```
 
-Then add all secrets configurations in `wiki/LocalSettings.php`
+### `wiki/LocalSettings.php`
+
+1. Complete the following variables in `wiki/LocalSettings.php`, for example :
+
+```php
+$wgSitename = "wiki.eirb.fr";
+$wgServer = "https://wiki.eirb.fr";
+```
+
+2. Generate a database password and configure `docker-compose.yml` and `wiki/LocalSettings.php` :
+
+```php
+## Database settings
+$wgDBtype = "mysql";
+$wgDBserver = "wiki-mariadb";
+$wgDBname = "wiki";
+$wgDBuser = "wiki";
+$wgDBpassword = "example";
+```
+
+3. Finally, fill the `$wgPluggableAuth_Config` variable with `connect.eirb.fr` client configuration, for example :
+
+```php
+$wgPluggableAuth_Config[] = [
+    'plugin' => 'OpenIDConnect',
+    'data' => [
+        'providerURL' => 'https://connect.eirb.fr/realms/eirb',
+        'clientID' => 'wiki',
+        'clientsecret' => '123467890abcdefghijklm',
+        'preferred_username' => 'uid'
+    ],
+];
+```
 
 ### Build
 
