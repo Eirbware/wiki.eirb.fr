@@ -46,7 +46,7 @@ $wgDBuser = "wiki";
 $wgDBpassword = "example";
 ```
 
-3. Finally, fill the `$wgPluggableAuth_Config` variable with `connect.eirb.fr` client configuration, for example :
+3. Then, fill the `$wgPluggableAuth_Config` variable with `connect.eirb.fr` client configuration, for example :
 
 ```php
 $wgPluggableAuth_Config[] = [
@@ -58,6 +58,14 @@ $wgPluggableAuth_Config[] = [
         'preferred_username' => 'uid'
     ],
 ];
+```
+
+4. Finally, generate random keys, for example :
+
+
+```php
+$wgSecretKey = "R4doMK3y";
+$wgUpgradeKey = "Sup3rR4nD0mK3y";
 ```
 
 ### Build
