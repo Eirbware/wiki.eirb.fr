@@ -21,7 +21,7 @@ $wgShowExceptionDetails = (getenv("USE_DEBUG") === "true");
 # $wgDisableOutputCompression = true;
 $wgSitename = getenv("SITE_NAME") ?: "wiki.eirb.fr";
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = getenv("server") ?: "http://localhost:8080";
+$wgServer = getenv("SERVER") ?: "http://localhost:8080";
 
 ## Database settings
 $wgDBtype = "mysql";
