@@ -54,15 +54,16 @@ $wgPluggableAuth_EnableAutoLogin = false;
 # Important otherwise new users will be created
 $wgOpenIDConnect_MigrateUsersByUserName = true;
 
-wfLoadExtension( "SyntaxHighlight_GeSHi" );
-wfLoadExtension( "InputBox" );
-wfLoadExtension( "WikiEditor" );
-wfLoadExtension( "CategoryTree" );
-wfLoadExtension( "Cite" );
-wfLoadExtension( "ParserFunctions" );
-wfLoadExtension( "Math" );
-wfLoadExtension( 'PluggableAuth' );
-wfLoadExtension( 'OpenIDConnect' );
+wfLoadExtension("SyntaxHighlight_GeSHi");
+wfLoadExtension("InputBox");
+wfLoadExtension("WikiEditor");
+wfLoadExtension("CategoryTree");
+wfLoadExtension("Cite");
+wfLoadExtension("ParserFunctions");
+wfLoadExtension("Math");
+wfLoadExtension('PluggableAuth');
+wfLoadExtension('OpenIDConnect');
+wfLoadExtension('MobileFrontend');
 
 
 $wgFooterIcons['poweredby']['eirbware'] = [
@@ -168,14 +169,15 @@ $wgGroupPermissions['*']['read'] = false;
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, e.g. 'vector' or 'monobook':
-$wgDefaultSkin = "vector";
+wfLoadSkin( 'Vector' );
+$wgDefaultSkin = "vector-2022";
+$wgDefaultMobileSkin = 'vector-2022';
 
 # Enabled skins.
 # The following skins were automatically enabled:
-wfLoadSkin( 'MinervaNeue' );
-wfLoadSkin( 'MonoBook' );
-wfLoadSkin( 'Timeless' );
-wfLoadSkin( 'Vector' );
+// wfLoadSkin( 'MinervaNeue' );
+// wfLoadSkin( 'MonoBook' );
+// wfLoadSkin( 'Timeless' );
 
 # End of automatically generated settings.
 # Add more configuration options below.
