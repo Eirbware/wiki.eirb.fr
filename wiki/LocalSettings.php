@@ -15,18 +15,20 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
+$wgShowExceptionDetails = (getenv("USE_DEBUG") === "true");
+
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
-$wgSitename = "wiki.eirb.fr";
+$wgSitename = getenv("SITE_NAME") ?: "wiki.eirb.fr";
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = "http://localhost:8080";
+$wgServer = getenv("server") ?: "http://localhost:8080";
 
 ## Database settings
 $wgDBtype = "mysql";
-$wgDBserver = "wiki-mariadb";
-$wgDBname = "wiki";
-$wgDBuser = "wiki";
-$wgDBpassword = "example";
+$wgDBserver = getenv("MYSQL_DBSERVER") ?: "wiki-mariadb";
+$wgDBname = getenv("MYSQL_DATABASE") ?: "wiki";
+$wgDBuser = getenv("MYSQL_USER") ?: "wiki";
+$wgDBpassword = getenv("MYSQL_PASSWORD") ?: "ch4nge_it";
 
 //
 //  KEYCLOAK CONFIGURATION
@@ -37,9 +39,9 @@ $wgArticlePath = "/index.php/$1";  # https://www.mediawiki.org/wiki/Extension:Op
 $wgPluggableAuth_Config[] = [
     'plugin' => 'OpenIDConnect',
     'data' => [
-        'providerURL' => '<Provider URL>',
-        'clientID' => '<Client id>',
-        'clientsecret' => '<Client secret>',
+        'providerURL' => getenv("KC_PROVIDER") ?: 'https://connect.eirb.fr/realms/eirb',
+        'clientID' => getenv("KC_CLIENT_ID") ?: 'wiki',
+        'clientsecret' => getenv("KC_CLIENT_SECRET") ?: 'no suitable default value',
         'preferred_username' => 'uid'  # Required to map users correctly, keycloak return uid as user data
     ],
 ];
@@ -69,10 +71,10 @@ $wgFooterIcons['poweredby']['eirbware'] = [
 	"alt" => "Powered by Eirbware",
 ];
 
-$wgSecretKey = "<Some secret i wont share, idk what it is used for>";
+$wgSecretKey = getenv("WG_SECRET_KEY") ?: "no suitable default value";
 # Site upgrade key. Must be set to a string (default provided) to turn on the
 # web installer while LocalSettings.php is in place
-$wgUpgradeKey = "<idk what it is but it seems secret>";
+$wgUpgradeKey = getenv("WG_UPGRADE_KEY") ?: "no suitable default value";
 
 
 ## The URL base path to the directory containing the wiki;
