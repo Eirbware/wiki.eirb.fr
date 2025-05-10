@@ -4,23 +4,29 @@
 #   (or "http://$(docker-machine ip):8080" if using docker-machine)
 services:
   mediawiki:
-    image: mediawiki:stable
+    image: eirbware/mediawiki
+    build: .
     container_name: mediawiki
     restart: unless-stopped
     ports:
       - 8080:80
     depends_on:
       - wiki-mariadb
+    environment:
+      - USE_DEBUG=true  # must exactly equal to "true"
+      - SITE_NAME=wiki.eirb.fr
+      - SERVER=http://localhost:8080
+      - MYSQL_DBSERVER=wiki-mariadb
+      - MYSQL_DATABASE=wiki
+      - MYSQL_USER=wiki
+      - MYSQL_PASSWORD=ch4nge_it
+      - KC_PROVIDER=https://connect.eirb.fr/realms/eirb
+      - KC_CLIENT_ID=wiki
+      - KC_CLIENT_SECRET=D4ocgPh27t07yeZjiEdZjTYx1JKaaUHg
+      - WG_SECRET_KEY=SOMETHING_RANDOM
+      - WG_UPGRADE_KEY=SOMETHING_RANDOM
     volumes:
       - ./wiki/images:/var/www/html/images
-      - ./wiki/extensions:/var/www/html/extensions
-      - ./wiki/LocalSettings.php:/var/www/html/LocalSettings.php
-      - ./wiki/composer.local.json:/var/www/html/composer.local.json
-      - ./wiki/getcomposer.sh:/var/www/html/getcomposer.sh
-      # After initial setup, download LocalSettings.php to the same directory as
-      # this yaml and uncomment the following line and use compose to restart
-      # the mediawiki service
-      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
 
   # https://docs.linuxserver.io/images/docker-mariadb
   wiki-mariadb:
@@ -31,9 +37,9 @@ services:
       - PGID=1001
       - TZ=Etc/UTC
       - MYSQL_ROOT_PASSWORD=ROOT_ACCESS_PASSWORD
-      - MYSQL_DATABASE=wiki #optional
-      - MYSQL_USER=wiki #optional
-      - MYSQL_PASSWORD=example #optional
+      - MYSQL_DATABASE=wiki
+      - MYSQL_USER=wiki
+      - MYSQL_PASSWORD=ch4nge_it
     volumes:
       - ./mariadb:/config
     restart: unless-stopped
