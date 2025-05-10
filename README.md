@@ -1,94 +1,54 @@
 # wiki.eirb.fr
 
-## Installation
+Ce dépôt contient les modifications faites à [mediawiki](https://www.mediawiki.org/wiki/MediaWiki) pour  [wiki.eirb.fr](https://wiki.eirb.fr).
 
-Steps needed :
+## Utilisation (docker-compose)
 
-1. Add db dump & configure `LocalSettings.php`
-2. Build
+Nous conseillons l'utilisation de [Docker Compose](https://docs.docker.com/compose/), le fichier `docker-compose.yml`
+suivant peut servir de base pour déployer le site.
 
-### DB dump
+Note : cette image a pour but d'être utilisée dans le cadre d'Eirbware, elle
+n'est probablement pas utilisable pour un evironnement différent.
 
-You should have a mediawiki dump if you're working on this, otherwise contact
-an Eirbware member, more information might be found at https://docs.eirb.fr
+```yaml
+services:
+  mediawiki:
+    image: ghcr.io/eirbware/wiki.eirb.fr:main
+    container_name: mediawiki
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    depends_on:
+      - wiki-mariadb
+    environment:
+      - USE_DEBUG=true  # must exactly equal to "true"
+      - SITE_NAME=wiki.eirb.fr
+      - SERVER=http://localhost:8080
+      - MYSQL_DBSERVER=wiki-mariadb
+      - MYSQL_DATABASE=wiki
+      - MYSQL_USER=wiki
+      - MYSQL_PASSWORD=ch4nge_it
+      - KC_PROVIDER=https://connect.eirb.fr/realms/eirb
+      - KC_CLIENT_ID=wiki
+      - KC_CLIENT_SECRET=REPLACE_THIS_BY_THE_RIGHT_SECRET
+      - WG_SECRET_KEY=SOMETHING_RANDOM
+      - WG_UPGRADE_KEY=SOMETHING_RANDOM
+    volumes:
+      - ./wiki/images:/var/www/html/images
 
-1. place the dump `wiki_dump.sql` in the directory `mariadb`
-2. execute :
-
-```sh
-docker exec -it wiki-mariadb bash
+  # https://docs.linuxserver.io/images/docker-mariadb
+  wiki-mariadb:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: wiki-mariadb
+    environment:
+      - PUID=1000
+      - PGID=1001
+      - TZ=Etc/UTC
+      - MYSQL_ROOT_PASSWORD=ROOT_ACCESS_PASSWORD
+      - MYSQL_DATABASE=wiki
+      - MYSQL_USER=wiki
+      - MYSQL_PASSWORD=ch4nge_it
+    volumes:
+      - ./mariadb:/config
+    restart: unless-stopped
 ```
-
-3. exec in container's shell :
-
-```sh
-mariadb wiki < /config/wiki.sql
-exit
-```
-
-### `wiki/LocalSettings.php`
-
-1. Complete the following variables in `wiki/LocalSettings.php`, for example :
-
-```php
-$wgSitename = "wiki.eirb.fr";
-$wgServer = "https://wiki.eirb.fr";
-```
-
-2. Generate a database password and configure `docker-compose.yml` and `wiki/LocalSettings.php` :
-
-```php
-## Database settings
-$wgDBtype = "mysql";
-$wgDBserver = "wiki-mariadb";
-$wgDBname = "wiki";
-$wgDBuser = "wiki";
-$wgDBpassword = "example";
-```
-
-3. Then, fill the `$wgPluggableAuth_Config` variable with `connect.eirb.fr` client configuration, for example :
-
-```php
-$wgPluggableAuth_Config[] = [
-    'plugin' => 'OpenIDConnect',
-    'data' => [
-        'providerURL' => 'https://connect.eirb.fr/realms/eirb',
-        'clientID' => 'wiki',
-        'clientsecret' => '123467890abcdefghijklm',
-        'preferred_username' => 'uid'
-    ],
-];
-```
-
-4. Finally, generate random keys, for example :
-
-
-```php
-$wgSecretKey = "R4doMK3y";
-$wgUpgradeKey = "Sup3rR4nD0mK3y";
-```
-
-### Build
-
-Just do :
-
-```sh
-make install
-```
-
-And the server will start with all extensions installed and configured
-
-## Migration (2025)
-
-Obligé d'exécuter
-
-```sh
-mariadb wiki < wiki_dump.sql
-```
-
-Puis dans le conteneur du wiki :
-
-```sh
-./maintenance/run update
-```
-
