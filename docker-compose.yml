@@ -22,7 +22,7 @@ services:
       - MYSQL_PASSWORD=ch4nge_it
       - KC_PROVIDER=https://connect.eirb.fr/realms/eirb
       - KC_CLIENT_ID=wiki
-      - KC_CLIENT_SECRET=D4ocgPh27t07yeZjiEdZjTYx1JKaaUHg
+      - KC_CLIENT_SECRET=REPLACE_THIS_BY_THE_RIGHT_SECRET
       - WG_SECRET_KEY=SOMETHING_RANDOM
       - WG_UPGRADE_KEY=SOMETHING_RANDOM
     volumes:
