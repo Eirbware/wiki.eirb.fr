@@ -2,3 +2,4 @@
 /mariadb
 /wiki
 *.sql
+.env
