@@ -1,4 +1,4 @@
-FROM mediawiki:lts
+FROM mediawiki:1.43.1
 
 # unzip is required at some point
 RUN apt update && apt install unzip
