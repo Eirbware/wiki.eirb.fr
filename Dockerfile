@@ -1,4 +1,4 @@
-FROM mediawiki:1.43.1
+FROM mediawiki:lts
 
 # unzip is required at some point
 RUN apt update && apt install unzip
@@ -16,7 +16,6 @@ RUN git clone --branch REL1_43 https://gerrit.wikimedia.org/r/mediawiki/extensio
 
 # Need composer to make OpenIDConnect work
 COPY wiki/getcomposer.sh wiki/composer.local.json .
-RUN ls
 RUN ./getcomposer.sh && composer install
 
 COPY wiki/LocalSettings.php .
