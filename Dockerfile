@@ -19,3 +19,7 @@ COPY wiki/getcomposer.sh wiki/composer.local.json .
 RUN ./getcomposer.sh && composer install
 
 COPY wiki/LocalSettings.php .
+
+# PHP Oct 2026 vulnerability fix ("temporary") (hi if you're seeing this 2 years later :3)
+RUN sed -i -E "s/^;?session\.upload_progress\.enabled = O.+$/session.upload_progress.enabled = Off/g" /usr/local/etc/php/php.ini-production
+RUN sed -i -E "s/^;?session\.upload_progress\.enabled = O.+$/session.upload_progress.enabled = Off/g" /usr/local/etc/php/php.ini-development
